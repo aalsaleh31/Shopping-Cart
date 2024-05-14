@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+			
+	<h1>Welcome to WISTFUL</h1>
+</div>
+<div class="container">
+	<div class="row">
+		
+		
+
+		{% for s in data %}
+		<div class="col">
+			<div class="card h-100 product" style="width: 21rem;height: 20rem;">
+				<div class="card-body">
+					<div class="card-header">
+						
+						<h5 class="card-title">{{s['item_name']}}</h5>
+						</div>
+						<img src="/static/images/{{s['item_id']}}.png" alt="{{s['item_name']}}" class="card-img-top" width="200" height="200">
+					
+						
+						<p class="card-text">{{s['item_desc']}}</p>
+						
+						{% if session['name']%}
+							
+						{% if s['item_stock'] > 0 %}
+							<form action = "/checkout" method = "POST" name="adding" onsubmit="return work_on({{s['item_stock']}}, {{s['item_id']}})">
+								<input type="hidden" value="{{s['item_id']}}" name="mything">
+								<input type ="number" value="add to cart" name="quantity" id="{{s['item_id']}}" oninput="return work_on({{s['item_stock']}}, {{s['item_id']}})">
+								<span id="error{{s['item_id']}}"></span>
+							</form>
+							{% else %}
+								<h2>OUT OF STOCK</h2>
+							{% endif %}
+						{% endif %}
+						<div class="card-footer">
+							<p>price: ${{s['item_price']}} &nbsp qty: {{s['item_stock']}} left</p>
+							
+						
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+
+<script>
+	function work_on(maximum, id){
+		let x = document.getElementById(id).value
+		let theerror = "error" + id
+		var error = document.getElementById(theerror)
+		console.log(id)
+		if(x == ""){
+			document.getElementById(id).className = "form-control is-invalid";
+			error.textContent = "please enter a number that is between 0 and " + maximum;
+			error.style.color = "red"
+			error.style.fontSize = "13px"
+			return false;
+		}
+		if (x < 0 || x > maximum){
+			document.getElementById(id).className = "form-control is-invalid"
+			error.textContent = "please enter a number that is between 0 and " + maximum;
+			error.style.color = "red"
+			error.style.fontSize = "13px"
+			return false;
+		}
+		else{
+			document.getElementById(id).className = "form-control is-valid"
+			error.textContent = "";
+			return true;
+		}
+		
+	}
+</script>
+{% endblock %}

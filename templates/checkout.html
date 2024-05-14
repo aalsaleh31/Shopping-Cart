@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+			
+
+    {%if isit == 1 %}
+        <h1>please remove one of the items it has more than the available stock</h1>
+    {% endif %}
+    {%if maxi == 1 %}
+        <h1>Sorry we dont have enough stock thats the max</h1>
+    {% endif %}
+    <h2>Total items: {{session['total_items']}}</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+
+                <th>Photo: </th>
+                <th>Name: </th>
+                <th>quantity: </th>
+                <th>Amount:</th>
+                <th>Update: </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in session['cart'] %}
+            <tr>
+
+                <td>
+                    <img height="150" width="150" src="/static/images/{{i[0]}}.png" alt="{{i[0]}}">
+                </td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>${{i[3]}}</td>
+
+                <td>
+                    
+                    <form action = "/updateit" method = "POST" onsubmit="return checkout({{i[4]}}, {{i[0]}})">
+                        <input type="hidden" value="{{i[0]}}" name="mything">
+                        <input type ="number" value="add to cart" name="quantity" id="{{i[0]}}" oninput="return checkout({{i[4]}}, {{i[0]}})">
+                        <input type="submit" class="btn btn-primary" value="Update">
+                        <span id="err{{i[0]}}"></span>
+
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>totale amount: ${{session['total_price']}}</h2>
+    <form action = "/clearcart" method = "POST">
+        <input type="submit" value="clear the cart">
+    </form>
+    <form action = "/bought" method = "POST">
+        <input type="submit" value="Checkout">
+    </form>
+
+    <a href="/">Go home</a>
+</div>
+<script>
+    function checkout(maximum, id){
+        let x = document.getElementById(id).value
+        let theerror = "err" + id
+        var error = document.getElementById(theerror)
+        if(x == ""){
+			document.getElementById(id).className = "form-control is-invalid";
+            error.textContent = "please enter a number that is between 0 and " + maximum;
+			error.style.color = "red"
+			error.style.fontSize = "13px"
+			return false;
+		}
+        else if (x < 0 || x > maximum){
+			document.getElementById(id).className = "form-control is-invalid"
+            error.textContent = "please enter a number that is between 0 and " + maximum;
+			error.style.color = "red"
+			error.style.fontSize = "13px"
+			return false;
+		}
+		else{
+			document.getElementById(id).className = "form-control is-valid"
+            error.textContent = "";
+			return true;
+		}
+    }
+</script>
+{% endblock %}

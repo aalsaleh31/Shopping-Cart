@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+
+
+{% block content %}
+<div class="container">
+
+<form action = "/search" method = "POST">
+		
+	<label> search again: </label>
+	<input type = "text" name = "my_search" placeholder = "search anything" required><br>
+	<input type = "submit" name = "submit">        
+</form>
+<a href="/">Go home page</a> 
+<h2>You searched for ....</h2>
+<h3>{{session['my_search']}}</h3>
+{% for i in myresult %}
+
+	<h3>{{i["item_name"]}}</h3>
+	<ul>
+		<li>price : ${{i['item_price']}}</li>
+		<li>quantity: {{i['item_stock']}} left</li>
+		<li>description: {{i['item_desc']}}</li>
+		<li>
+			<img src="/static/images/{{i['item_id']}}.png" alt="{{i['item_name']}}" width="200" height="200">
+		</li>
+		{% if i['item_stock'] > 0 %}
+			<form action = "/checkout" method = "POST">
+				<input type="hidden" value="{{i['item_id']}}" name="mything">
+				<input type ="number" value="add to cart" name="quantity" required min="1" max="{{i['item_stock']}}">
+				<input type="submit" value="add to cart">
+			</form>
+		{% else %}
+			<li>OUT OF STOCK</li>
+		{% endif %}
+	</ul>
+{% endfor %}
+</div>
+
+
+{% endblock %}

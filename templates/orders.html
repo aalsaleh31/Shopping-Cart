@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+    <form action = "/orders" method = "POST" onsubmit="return search()" name="searchorder">
+		<div class="form-group">
+            <label> search for an order: </label>
+            <input id="ordersearch" class="form-control" type = "text" name = "my_search" placeholder = "search anything" oninput="return search()">
+            <span id="ordererror"></span>
+        </div>       
+    </form>
+
+    <form action = "/orderit" method = "POST">
+    <div class="form-group">
+        
+        <label> order by date: </label>
+        <select name="selection" required>
+            <option value="">....</option>
+            <option value="good">ascending</option>
+            <option value="reverse">descending</option>
+        </select>
+        <input type = "submit" value = "order it">
+    </div>
+                
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Order Number: </th>
+                <th>Order Date: </th>
+                <th>Order quantity:</th>
+                <th>Order Amount:</th>
+                <th>Details: </th>
+                
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for i in data %}
+                {% if i['username_id'] == session['username'] %}
+                    {% if i['my_id'] in searched%}
+                        <tr>
+                            <td>{{i['my_id']}}</td>
+                            <td> {{i['my_date']}}</td>
+                            <td>{{i['total_count']}}</td>
+                            <td>${{i['total_amount']}}</td>
+                            <td>   
+                                <form action="/order/{{i['my_id']}}" method = "POST">
+                                    <input type = "submit" value = "more details">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                {% if not searched%}
+                    {% if tried == 0%}
+
+                    <tr>
+                        <td>{{i['my_id']}}</td>
+                        <td>{{i['my_date']}}</td>
+                        <td>{{i['total_count']}}</td>
+                        <td>${{i['total_amount']}}</td>
+                        <td>   
+                            <form action="/order/{{i['my_id']}}" method = "POST">
+                                <input type = "submit" value = "more details">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
+
+                {% endif %}
+            {% endfor %}
+
+            {% if not searched%}
+                {% if tried == 1%}
+                    <h2>no orders found</h2>
+                {% endif %}
+            {% endif %}
+
+        </tbody>
+    </table>
+    <a href="/">Go home</a>
+    <script>
+        function search(){
+            let x = document.forms["searchorder"]['my_search'].value;
+            let err = document.getElementById("ordererror")
+            if (x == ""){//class="form-control is-invalid"
+                document.getElementById("ordersearch").className = "form-control is-invalid"
+                err.textContent = "Cant search for nothing";
+			    err.style.color = "red"
+                return false;
+            }
+            else{
+                err.textContent = ""
+                document.getElementById("ordersearch").className = "form-control is-valid"
+                return true;//class="form-control is-valid"
+            }
+        }
+    </script>
+</div>
+{% endblock %}

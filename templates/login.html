@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+<div class="container">
+
+
+    <h1>log in page</h1>
+    {% if error == 1 %}
+        <h2>Invalid username or Password try again</h2>
+    {% endif %}
+    <form action = "/login" method = "POST" name="loginform" onsubmit="return login()">
+        <div class="form-group">
+            <label> Username: </label>
+            <input class="form-control" type = "text" name = "user_email" id="username_input" placeholder = "username" oninput="return login()">
+            <span id="xerror"></span>
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input class="form-control" type = "password" name = "user_pass" id="user_pass" placeholder = "Password" oninput="return login()">  
+            <span id="yerror"></span>
+        </div>
+        <input class="btn btn-default"  type = "submit" value = "log in">
+
+        <a class="btn btn-default" href="/sign_up">Dont have an account</a>
+        
+        
+    </form>
+</div>
+<script>
+    function login(){
+        let x = document.forms["loginform"]['user_email'].value;
+        let y = document.forms["loginform"]['user_pass'].value;
+        let xerror = document.getElementById("xerror");
+        let yerror = document.getElementById("yerror");
+        if (x == ""){//class="form-control is-invalid"
+            document.getElementById("username_input").className = "form-control is-invalid"
+            xerror.textContent = "Cant log in with empty username";
+			xerror.style.color = "red"
+            
+        }
+        else if(x != ""){
+            document.getElementById("username_input").className = "form-control is-valid"
+            xerror.textContent = ""
+        }
+        if(y == ""){
+            document.getElementById("user_pass").className = "form-control is-invalid"   
+            yerror.textContent = "Cant log in with empty password";
+			yerror.style.color = "red";
+        }
+        else if(y != ""){
+            document.getElementById("user_pass").className = "form-control is-valid"   
+            yerror.textContent = ""
+        }
+        if(x == "" || y== ""){
+            
+            return false;
+        }
+        else{
+            
+            return true;//class="form-control is-valid"
+        }
+    }
+</script>
+{% endblock %}

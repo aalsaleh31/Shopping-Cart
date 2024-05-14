@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+    {% if error == 1 %}
+    <h2>Username already taken please try a different username</h2>
+    {% endif %}
+
+    <h1>sign up</h1>
+    <form action = "/sign_up" method="POST" name="signup" onsubmit="return checkSignUp()">
+        <div class="form-group">
+            <label for="">Username</label>
+            <input class="form-control" type="text" name="sign_email" size="30" id="username_input"> 
+            <span id="xerror"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="">name</label>
+            <input class="form-control" type="text" name="sign_name" id="user_name">
+            <span id="yerror"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="">password</label>
+            <input class="form-control" type="password" name="sign_pass" id="user_pass">
+            <span id="zerror"></span>
+        </div>
+        <input class="btn btn-default" type="submit" name="signs">
+
+        <a class="btn btn-default" href="/login"> Already singed up</a>
+    </form>
+</div>
+<script>
+    function checkSignUp(){
+        let x = document.forms["signup"]['sign_email'].value;
+        let y = document.forms["signup"]['sign_name'].value;
+        let z = document.forms["signup"]['sign_pass'].value;
+        let xerror = document.getElementById("xerror");
+        let yerror = document.getElementById("yerror");
+        let zerror = document.getElementById("zerror");
+
+        if (x == ""){//class="form-control is-invalid"
+            document.getElementById("username_input").className = "form-control is-invalid"
+            xerror.textContent = "Cant sign up with empty username";
+			xerror.style.color = "red"
+        }
+        else if(x != ""){
+            document.getElementById("username_input").className = "form-control is-valid"
+            xerror.textContent = ""
+        }
+        if(y == ""){
+            document.getElementById("user_name").className = "form-control is-invalid"   
+            yerror.textContent = "Cant sign up with no name";
+			yerror.style.color = "red"
+        }
+        else if(y != ""){
+            document.getElementById("user_name").className = "form-control is-valid"   
+            yerror.textContent = ""
+        }
+        if(z == ""){
+            document.getElementById("user_pass").className = "form-control is-invalid"   
+            zerror.textContent = "Cant sign up with no password";
+			zerror.style.color = "red"
+        }
+        else if(z != ""){
+            document.getElementById("user_pass").className = "form-control is-valid"   
+            zerror.textContent = ""
+        }
+
+        if(x == "" || y== "" || z== ""){
+            return false;
+        }
+        else{
+            
+            return true;//class="form-control is-valid"
+        }
+    }
+
+</script>
+{% endblock %}
